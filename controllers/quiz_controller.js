@@ -187,3 +187,30 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/randomcheck/:quizId?answer=respuesta
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || "";
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+
+    res.render('quizzes/random_result', {
+        quiz: req.quiz,
+        result: result,
+        answer: answer
+    });
+
+};
+// GET /quizzes/randomplay
+exports.randomplay = function (req, res, next) {
+
+    var answer = req.query.answer || '';
+
+    res.render('quizzes/play', {
+        quiz: req.quiz,
+        answer: answer,
+        idusados: 898
+    });
+};
+
