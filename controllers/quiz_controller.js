@@ -204,13 +204,37 @@ exports.randomcheck = function (req, res, next) {
 };
 // GET /quizzes/randomplay
 exports.randomplay = function (req, res, next) {
+    var array= models.quizz.findAll();
+    var esta=false;
+    var i;
+    var longitud =quizzes.count.array;
+    var used= req.session.randomPlay.resolved.length ? req.session.randomPlay.resolved:[-1]
+    var numeroid =(Math.floor(Math.random() * longitud));
+    function usados(used,numeroid ) {
+            for (i =0; i< quizzes.count.used;i++){
+                if (used[i] == numeroid) {
+                    esta= true;
+                }
+
+            }
+        esta=false;
+
+    }
+    while(esta==true){
+        numeroid=(Math.floor(Math.random() * longitud));
+        usados(used,numeroid);
+    }
+
+    var quizAMostrar= Models.quiz.findById(Number(numeroid));
+    // sino Quiz.findAll({ limit:1, offset: numeroid});
+
 
     var answer = req.query.answer || '';
 
-    res.render('quizzes/play', {
-        quiz: req.quiz,
+    res.render('quizzes/randomplay', {
+        quiz:quizAMostrar,
         answer: answer,
-        idusados: 898
+
     });
 };
 
