@@ -53,10 +53,10 @@ exports.index = function (req, res, next) {
         findOptions.offset = items_per_page * (pageno - 1);
         findOptions.limit = items_per_page;
 
-        return models.Quiz.findAll(findOptions);
+        return models.Quiz.findAll(findOptions); //este return se lo pasa al siguietne then cuando acaba el proceso
     })
     .then(function (quizzes) {
-        res.render('quizzes/index.ejs', {
+        res.render('quizzes/randomplay.ejs', {
             quizzes: quizzes,
             search: search
         });
@@ -187,3 +187,45 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/randomplay
+exports.randomplay = function (req, res, next) {
+
+    var miarraydejuego= models.quizz.findAll();//array con todos los quizzes
+    var count = models.quizz.count();//devuelve el numero de elementos en nuestra tabla quizz inicial
+    //models es nuestor modelo de base de datos quiz es nuestra base y count pues es count
+
+    //hacer algo asi como count-score para saber las que quedan
+
+    var random = Math.random() % count; //funcion que saca un numero aleatorio entre 0 y el numero count por que hace
+                                    //la division entera de por ejemplo un numero random (que es entre 0 y 1) y lo divide y se queda con el resto
+    var miquiz = models.quizz.findById(random);
+
+
+        //if no quedan preguntas entonces pasar res.render('quizzes/random_nomore', {
+        //  score:score
+        //   });
+    res.render('quizzes/randomplay', {
+        quiz: req.miquiz,
+
+    });
+};
+// GET /quizzes/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer || ""; //pedimos la respuesta que viene de random play
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+    var array_de_preguntas= {};
+    array_de_preguntas.add(req.quiz);
+    var numero_respondidas = models.quizz.findAll().count() - array_de_preguntas.count();
+
+    res.render('quizzes/randomresult', {
+        quiz: req.quiz,
+        result: result,
+        answer: answer,
+        score:numero_respondidas
+    });
+};
+
+
