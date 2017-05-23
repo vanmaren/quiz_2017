@@ -1,5 +1,7 @@
 var models = require("../models");
 var Sequelize = require('sequelize');
+//var sequelize = new Sequelize(null,null,null,
+//    {dialect:"sqlite", storage:"quiz.sqlite.Quizzes"});
 
 var paginate = require('../helpers/paginate').paginate;
 
@@ -56,7 +58,7 @@ exports.index = function (req, res, next) {
         return models.Quiz.findAll(findOptions); //este return se lo pasa al siguietne then cuando acaba el proceso
     })
     .then(function (quizzes) {
-        res.render('quizzes/randomplay.ejs', {
+        res.render('quizzes/play.ejs', {
             quizzes: quizzes,
             search: search
         });
@@ -191,22 +193,44 @@ exports.check = function (req, res, next) {
 // GET /quizzes/randomplay
 exports.randomplay = function (req, res, next) {
 
-    var miarraydejuego= models.quizz.findAll();//array con todos los quizzes
-    var count = models.quizz.count();//devuelve el numero de elementos en nuestra tabla quizz inicial
+    var miarraydejuego = models.Quiz.findAll();//array con todos los quizzes
+    models.Quiz.count()
+        .then(function (count) {
+            var random= Math.floor(Math.random() * (count));
+            var miquiz = models.Quiz.findById(random);
+            return miquiz;
+        })
+        .then(function(miquiz){
+
+
+
+        })
+
+
+
+
+
+
+
+    //devuelve el numero de elementos en nuestra tabla quizz inicial
     //models es nuestor modelo de base de datos quiz es nuestra base y count pues es count
 
     //hacer algo asi como count-score para saber las que quedan
 
-    var random = Math.random() % count; //funcion que saca un numero aleatorio entre 0 y el numero count por que hace
+    //var random = Number(Math.random() % count); //funcion que saca un numero aleatorio entre 0 y el numero count por que hace
                                     //la division entera de por ejemplo un numero random (que es entre 0 y 1) y lo divide y se queda con el resto
-    var miquiz = models.quizz.findById(random);
+    ;
 
+    req.session.quiz.score.INTEGER = 0;
+   // var quizprueba = models.Quiz.findById(2);
+    req.quiz=miquiz;
 
         //if no quedan preguntas entonces pasar res.render('quizzes/random_nomore', {
         //  score:score
         //   });
     res.render('quizzes/randomplay', {
-        quiz: req.miquiz,
+        quiz: req.quiz,
+        score:req.session.quiz.score
 
     });
 };
@@ -218,7 +242,7 @@ exports.randomcheck = function (req, res, next) {
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
     var array_de_preguntas= {};
     array_de_preguntas.add(req.quiz);
-    var numero_respondidas = models.quizz.findAll().count() - array_de_preguntas.count();
+    var numero_respondidas = models.Quiz.findAll().count() - array_de_preguntas.count();
 
     res.render('quizzes/randomresult', {
         quiz: req.quiz,

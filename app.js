@@ -12,6 +12,11 @@ var methodOverride = require('method-override');
 var index = require('./routes/index');
 
 var app = express();
+//var Sequelize = require('sequelize');
+
+//var sequelize = new Sequelize("sqlite:///",
+ //                               {storage:"quiz:sqlite"
+   //                             });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
