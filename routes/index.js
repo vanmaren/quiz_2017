@@ -14,13 +14,9 @@ router.get('/author', function(req, res, next) {
 });
 
 //Pagina de juego
-router.get('/quizzes/randomplay', function(req, res, next) {
-    res.render('random_play');
-});
-router.get('/quizzes/randomcheck/:quizId?answer=respuesta', function(req, res, next) {
-    res.render('random_result');
-});
+router.get('/quizzes/randomplay', quizController.randomplay);
 
+router.get('/quizzes/randomcheck/:quizId?answer=respuesta', quizController.randomcheck);
 
 
 // Autoload de rutas que usen :quizId

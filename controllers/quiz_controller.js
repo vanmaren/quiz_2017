@@ -204,37 +204,38 @@ exports.randomcheck = function (req, res, next) {
 };
 // GET /quizzes/randomplay
 exports.randomplay = function (req, res, next) {
-    var array= models.quizz.findAll();
-    var esta=false;
-    var i;
-    var longitud =quizzes.count.array;
-    var used= req.session.randomPlay.resolved.length ? req.session.randomPlay.resolved:[-1]
-    var numeroid =(Math.floor(Math.random() * longitud));
-    function usados(used,numeroid ) {
-            for (i =0; i< quizzes.count.used;i++){
-                if (used[i] == numeroid) {
-                    esta= true;
-                }
-
-            }
-        esta=false;
-
-    }
-    while(esta==true){
-        numeroid=(Math.floor(Math.random() * longitud));
-        usados(used,numeroid);
+    if(!req.session.p52){
+        req.session.p52={resolved:[-1]};
     }
 
-    var quizAMostrar= Models.quiz.findById(Number(numeroid));
-    // sino Quiz.findAll({ limit:1, offset: numeroid});
+    models.Quiz.count({where:{id:{$notIn:req.session.p52.resolved}}})
+
+        .then(function(count){
+            if(count==0){
+                res.render('quizzes/randonomore', {
+                    score: req.session.p52.resolved.length - 1,
+                    //session_unregister(resolved);
+                    }
+                )
+            }else {
+                var numeroRandom = (Math.floor(Math.random() * count));
+                return models.Quiz.findAll({
+                    where: {id: {$notIn: req.session.p52.resolved}},
+                    limit: 1,
+                    offset: numeroRandom
+
+                    });
+        }})
+        .then(function(quizzes){
+
+            res.render('quizzes/randomplay', {
+                quiz:quizzes[0],
+                score: req.session.p52.resolved.length-1
+            })
+
+        })
 
 
-    var answer = req.query.answer || '';
 
-    res.render('quizzes/randomplay', {
-        quiz:quizAMostrar,
-        answer: answer,
-
-    });
 };
 
