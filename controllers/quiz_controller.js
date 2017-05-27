@@ -196,7 +196,7 @@ exports.randomplay = function (req, res, next) {
         req.session.p52={pyp:[-1]};
     }
 
-    models.Quiz.count({where:{id:{$notIn:req.session.p52.pyp}}})
+    models.Quiz.count({where:{id:{$notIn:req.session.p52.pyp}}}||0)
         .then(function (count) {
             if(!req.session.p52.max){
                 req.session.p52.max=count;
@@ -226,11 +226,11 @@ exports.randomplay = function (req, res, next) {
                 score:req.session.p52.pyp.length-1} );
 
         })
-        .catch(function (error) {
+        //.catch(function (error) {
 
-            res.render('quizzes/randomnomore',{score: req.session.p52.pyp.length-1 });
+           // res.render('quizzes/randomnomore',{score: req.session.p52.pyp.length-1 });
 
-        })
+      //  })
 
 
 };
@@ -256,8 +256,8 @@ exports.randomcheck = function (req, res, next) {
         // session_unregister(req.session.p52.pyp);
 
         //   }if(req.session.p52.pyp.length){
-     var score= req.session.p52.pyp-1;
-  res.render('quizzes/randomnomore',{score: score -1});
+    // var score= req.session.p52.pyp-1;
+        // res.render('quizzes/randomnomore',{score: score -1});
     }
     else{
         req.session.p52.pyp.push(req.quiz.id);
