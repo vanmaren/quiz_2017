@@ -193,11 +193,11 @@ exports.check = function (req, res, next) {
 // GET /quizzes/randomplay
 exports.randomplay = function (req, res, next) {
 
-    var miarraydejuego = models.Quiz.findAll();//array con todos los quizzes
-    models.Quiz.count()
+    var miarraydejuego = quiz.sqlite.quizzes.findAll();//array con todos los quizzes
+    quiz.sqlite.quizzes.count()
         .then(function (count) {
             var random= Math.floor(Math.random() * (count));
-            var miquiz = models.Quiz.findById(random);
+            var miquiz = quiz.sqlite.quizzes.findById(random);
             return miquiz;
         })
         .then(function(miquiz){
@@ -205,13 +205,6 @@ exports.randomplay = function (req, res, next) {
 
 
         })
-
-
-
-
-
-
-
     //devuelve el numero de elementos en nuestra tabla quizz inicial
     //models es nuestor modelo de base de datos quiz es nuestra base y count pues es count
 
@@ -229,7 +222,7 @@ exports.randomplay = function (req, res, next) {
         //  score:score
         //   });
     res.render('quizzes/randomplay', {
-        quiz: req.quiz,
+        quiz: miquiz,
         score:req.session.quiz.score
 
     });
