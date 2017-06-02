@@ -14,8 +14,8 @@ router.get('/author', function(req, res, next) {
 });
 
 //Pagina de juego
-router.get('/quizzes/random_play', quizController.randomplay);
-router.get('/quizzes/random_check/:quizId(\\d+)', quizController.randomcheck);
+router.get('/quizzes/randomplay', quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
 
 
