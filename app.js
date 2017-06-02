@@ -32,36 +32,23 @@ app.use(partials());
 app.use(flash());
 
 app.use('/', index);
-var ses;
-app.get('/',function(req,res){
-    ses=req.session;
-    /*
-     * Here we have assign the 'session' to 'sess'.
-     * Now we can create any number of session variable we want.
-     * in PHP we do as $_SESSION['var name'].
-     * Here we do like this.
-     */
-    ses.email; // equivalent to $_SESSION['email'] in PHP.
-    ses.username;
-    sess.id;
-    sess.resolved// equivalent to $_SESSION['username'] in PHP.
-});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
