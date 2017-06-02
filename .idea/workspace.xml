@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5dc58d5-66f7-4a22-8786-72af7117511f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/npm-debug.log" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/quizzes/random_nomore.ejs" afterPath="$PROJECT_DIR$/views/quizzes/randomnomore.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/quizzes/random_play.ejs" afterPath="$PROJECT_DIR$/views/quizzes/randomplay.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/quizzes/random_result.ejs" afterPath="$PROJECT_DIR$/views/quizzes/randomresult.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/quiz_controller.js" afterPath="$PROJECT_DIR$/controllers/quiz_controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-    </list>
+    <list default="true" id="c5dc58d5-66f7-4a22-8786-72af7117511f" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -99,8 +91,8 @@
       <file leaf-file-name="quiz_controller.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/controllers/quiz_controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="200" column="34" lean-forward="false" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
+            <state relative-caret-position="426">
+              <caret line="214" column="40" lean-forward="true" selection-start-line="214" selection-start-column="40" selection-end-line="214" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -410,12 +402,12 @@
       <workItem from="1495835296085" duration="1936000" />
       <workItem from="1495902238602" duration="781000" />
       <workItem from="1496413640479" duration="4749000" />
-      <workItem from="1496423908177" duration="2763000" />
+      <workItem from="1496423908177" duration="3182000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15918000" />
+    <option name="totallyTimeSpent" value="16337000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -859,8 +851,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/quiz_controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="200" column="34" lean-forward="false" selection-start-line="200" selection-start-column="34" selection-end-line="200" selection-end-column="34" />
+        <state relative-caret-position="426">
+          <caret line="214" column="40" lean-forward="true" selection-start-line="214" selection-start-column="40" selection-end-line="214" selection-end-column="40" />
           <folding />
         </state>
       </provider>
