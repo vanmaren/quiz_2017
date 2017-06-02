@@ -222,3 +222,82 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/random_play
+exports.randomplay = function (req, res, next) {
+
+  if(!req.session.p52){
+      req.session.p52={pyp:[-1]};
+     }
+    if(req.session.p52.max==req.session.p52.pyp.length-1){
+        var score = req.session.p52.pyp.length-1;
+        score.INTEGER;
+        req.session.p52.pyp.length=1;
+        req.session.p52.max.length=1;
+        delete req.session.p52.max;
+        res.render('quizzes/randomnomore',{ score: score });
+        next();
+    }
+     models.Quiz.count({where:{id:{$notIn:req.session.p52.pyp}}}) // cuenta el numero de preguntas, la lomngitud del array de pregunatas
+     .then(function (count) {
+         if(!req.session.p52.max){ // si no existen el atributo max lo crea siendo el numero de preguntas maximas
+             req.session.p52.max=count; //iguala maxima al resto de preguntas
+         }
+        /* if(req.session.p52.pyp.length-1 == req.session.p52.max){ // en el caso de que haya contestado todad
+             var score = req.session.pyp-1;
+             score.INTEGER;
+             delete req.session.p52;
+             delete req.session.p52.max;
+              res.render('quizzes/randomnomore',{ score: score });
+             next();
+
+         }*/
+        // else{
+             var aleatoria = Math.floor(Math.random()*count);
+             return models.Quiz.findAll({where:{id:{$notIn:req.session.p52.pyp}},limit:1,offset:aleatoria}); //para ir concatenando promesas entre si se
+             //usa un return
+         //}
+         })
+             .then(function (quizzes) {
+                 var q = quizzes[0];
+
+                 res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1} );
+
+             })
+
+
+    };
+
+// GET /quizzes/randomcheck
+exports.randomcheck = function (req, res, next) {
+
+    var answer = req.query.answer|| ""; //la respuesta del quiz se pasa por medio de la url  y entonces la cohe
+
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim(); //compara las respuestas
+
+    if(!result){
+
+        var score = req.session.p52.pyp.length-1;
+        score.INTEGER;
+        delete req.session.p52;
+        res.render('quizzes/randomresult', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score: score
+        });
+          //delete req.session.p52;
+
+
+    } else{
+        req.session.p52.pyp.push(req.quiz.id);
+        res.render('quizzes/randomresult', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score: req.session.p52.pyp.length-1
+        });
+
+    }
+
+};
