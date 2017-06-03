@@ -253,17 +253,10 @@ exports.randomplay = function (req, res, next) {
              .then(function (quizzes) {
                  var q = quizzes[0];
 
-
                  return models.Tip.findAll({where:{Authorid:q.AuthorId}})
                      .then(function (pistas) {
-                         var arrayDePistas;
-                         for(var i =0; i<pistas.length; i++){
-                            if(pista[i].quiz==quiz){
-                                buscaposicion+=pista[i].text;
-                            }
-                         }
-                         var arrayDePistas = pistas[].text;
-                         res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1,pistas:arrayDePistas, autor:q.AuthorId});
+                         var arrayDePistas = pistas[0].text;
+                         res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1,pistas:arrayDePistas, autor:quiz.q.AuthorId});
 
                      })
 
