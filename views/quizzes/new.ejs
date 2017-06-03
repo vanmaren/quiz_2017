@@ -1,9 +1,33 @@
-<h1>
-    Añadir pregunta:
-</h1>
+<ul>
+    <% for (var i in tips) { %>
+    <% var tip = tips[i]; %>
 
-<form method="post" action="/quizzes">
+    <% var accepted = tip.accepted; %>
+    <% var isAdmin = session.user && session.user.isAdmin; %>
+    <% var isQuizAuthor = session.user && quizAuthorId && quizAuthorId === session.user.id; %>
 
-    <% include ../../../../quiz_2017_kike/views/quizzes/_form.ejs %>
+    <% if (accepted || isAdmin || isQuizAuthor) { %>
 
-</form>
+    <li>
+        <%= tip.text %>
+
+        <% if (!accepted && (isAdmin || isQuizAuthor)) { %>
+
+        <a href="/quizzes/<%= quizId %>/tips/<%= tip.id %>/accept?_method=PUT">
+            <button>Aceptar</button>
+        </a>
+
+        <% } %>
+
+        <% if (isAdmin || isQuizAuthor) { %>
+
+        <a href="/quizzes/<%= quizId %>/tips/<%= tip.id %>?_method=DELETE">
+            <button>Borrar</button>
+        </a>
+
+        <% } %>
+    </li>
+    <% } %>
+
+    <% } %>
+</ul>
