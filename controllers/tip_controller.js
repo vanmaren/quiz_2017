@@ -40,7 +40,7 @@ exports.create = function (req, res, next) {
     var tip = models.Tip.build(
         {
             text: req.body.text,
-            QuizId: req.quiz.id
+            QuizId: req.quiz.id //quiz al que esta asociada la pista, se añade con Tip.belongsTo(Quiz)
         });
 
     tip.save()
@@ -58,7 +58,7 @@ exports.create = function (req, res, next) {
         }
 
         // Necesario usar ""+ en la sentencia anterior porque se pierde la referencia al error.
-        res.redirect("back");
+        res.redirect("back"); //con back se consigue ir a la visra anterior, vuelve a donde estaba que será show o play
     })
     .catch(function (error) {
         req.flash('error', 'Error al crear una Pista: ' + error.message);

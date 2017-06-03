@@ -40,11 +40,6 @@
     </tr>
     <% } %>
 </table>
-<ul>
-    <%for (var i in tips){%>
-    <li><%=tips[i].text %></li>
-    <%}%>
-</ul>
 <% if (session.user) { %>
     <a href="/quizzes/new"><button type="button">Crear pregunta</button></a>
 <% } %>

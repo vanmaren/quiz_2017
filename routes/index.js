@@ -127,6 +127,7 @@ router.get('/quizzes/:quizId(\\d+)/check',
 router.get('/quizzes/:quizId(\\d+)/tips/new',
     sessionController.loginRequired,
     tipController.new);
+//esta primitiva permite añadir una nueva pista a la BBDD
 router.post('/quizzes/:quizId(\\d+)/tips',
     sessionController.loginRequired,
     tipController.create);

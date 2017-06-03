@@ -30,10 +30,12 @@ module.exports = {
             },
             {
                 sync: {force: true}
+                //indica que hay que forzar los cambios si hay
+                //incompatibilidad o error al arrancar
             }
         );
     },
-
+// añades la funcion para eliminar la tabla o deshacer cambios
     down: function (queryInterface, Sequelize) {
         return queryInterface.dropTable('Tips');
     }

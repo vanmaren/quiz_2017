@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+    //añades funciones a la tabla uSUARIOS
     up: function (queryInterface, Sequelize) {
         return queryInterface.createTable('Users',
             {
@@ -43,7 +44,7 @@ module.exports = {
             }
         );
     },
-
+//Las funciones down se eliminan
     down: function (queryInterface, Sequelize) {
         return queryInterface.dropTable('Users');
     }
