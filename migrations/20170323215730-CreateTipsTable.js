@@ -26,6 +26,10 @@ module.exports = {
                 updatedAt: {
                     type: Sequelize.DATE,
                     allowNull: false
+                },
+
+                AuthorId: {
+                    type: Sequelize.INTEGER
                 }
             },
             {

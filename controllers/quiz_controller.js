@@ -1,31 +1,24 @@
 var models = require("../models");
 var Sequelize = require('sequelize');
-
+var session =require('./session_controller')
 var paginate = require('../helpers/paginate').paginate;
 
 // Autoload el quiz asociado a :quizId
 exports.load = function (req, res, next, quizId) {
 
-    models.Quiz.findById(quizId, {include: [models.Tip]})
-        .then(function (quiz) {
-            if (quiz) {
-                req.quiz = quiz;
-                next()
-            } else {
-                throw new Error("no existe ningun quiz")
-            }
-        })
-
     models.Quiz.findById(quizId, {
         include: [
-            models.Tip,
+            {model: models.Tip, include: [{model: models.User, as: 'Author'}]},
             {model: models.User, as: 'Author'}
         ]
-    })
-    .then(function (quiz) {
+    }).then(function (quiz) {
+
+
         if (quiz) {
             req.quiz = quiz;
+
             next();
+
         } else {
             throw new Error('No existe ningún quiz con id=' + quizId);
         }
@@ -253,27 +246,29 @@ exports.randomplay = function (req, res, next) {
          if(!req.session.p52.max){ // si no existen el atributo max lo crea siendo el numero de preguntas maximas
              req.session.p52.max=count; //iguala maxima al resto de preguntas
          }
-        /* if(req.session.p52.pyp.length-1 == req.session.p52.max){ // en el caso de que haya contestado todad
-             var score = req.session.pyp-1;
-             score.INTEGER;
-             delete req.session.p52;
-             delete req.session.p52.max;
-              res.render('quizzes/randomnomore',{ score: score });
-             next();
-
-         }*/
-        // else{
              var aleatoria = Math.floor(Math.random()*count);
-             return models.Quiz.findAll({where:{id:{$notIn:req.session.p52.pyp}},limit:1,offset:aleatoria}); //para ir concatenando promesas entre si se
-             //usa un return
-         //}
+             return models.Quiz.findAll({where:{id:{$notIn:req.session.p52.pyp}},limit:1,offset:aleatoria});
+             //para ir concatenando promesas entre si
          })
              .then(function (quizzes) {
                  var q = quizzes[0];
 
-                 res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1} );
+
+                 return models.Tip.findAll({where:{Authorid:q.AuthorId}})
+                     .then(function (pistas) {
+                         var arrayDePistas;
+                         for(var i =0; i<pistas.length; i++){
+                            if(pista[i].quiz==quiz){
+                                buscaposicion+=pista[i].text;
+                            }
+                         }
+                         var arrayDePistas = pistas[].text;
+                         res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1,pistas:arrayDePistas, autor:q.AuthorId});
+
+                     })
 
              })
+
 
 
     };

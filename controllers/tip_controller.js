@@ -1,6 +1,6 @@
 var models = require('../models');
 var Sequelize = require('sequelize');
-
+var session =require('./session_controller')
 
 // Autoload la pista asociado a :tipId
 exports.load = function (req, res, next, tipId) {
@@ -86,13 +86,17 @@ exports.accept = function (req, res, next) {
 
 // DELETE /quizzes/:quizId/tips/:tipId
 exports.destroy = function (req, res, next) {
+     if(session.adminOrMyselfRequired) {
+         req.tip.destroy()
 
-    req.tip.destroy()
-    .then(function () {
-        req.flash('success', 'Pista eliminada con éxito.');
-        res.redirect('/quizzes/' + req.params.quizId);
-    })
-    .catch(function (error) {
-        next(error);
-    });
+             .then(function () {
+
+                 req.flash('success', 'Pista eliminada con éxito.');
+                 res.redirect('/quizzes/' + req.params.quizId);
+             })
+             .catch(function (error) {
+                 next(error);
+             });
+     }
 };
+
