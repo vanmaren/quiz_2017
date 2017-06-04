@@ -19,6 +19,21 @@
         <input type="submit" class="itemNarrow" id="send" value="Comprobar">
     </div>
 
+    <ul><span id="pistas"><%= pistas %></span></ul>
+
+    <h1>
+        Pistas:
+    </h1>
+
+    <% if (session.user) { %>
+        <% include ../tips/new %>
+    <% } %>
+
+    <% var tips = quiz.Tips; %>
+    <% var quizId = quiz.id; %>
+    <% var quizAuthorId = quiz.AuthorId; %>
+
+    <% include ../tips/index %>
 
 
 
@@ -28,15 +43,4 @@
 </p>
 
 <a href="/quizzes"><button>Volver</button></a>
-<h1>Pistas:</h1>
-<ul><span id="pistas"><%= pistas %></span></ul>
-<p></p>
-<span id="autor"><%= autor %></span>
-<% if (session.user) { %>
-<% include ../tips/new %>
-<% } %>
 
-<% var tips = quiz.Tips; %>
-<% var quizId = quiz.id; %>
-
-<% include ../tips/index %>

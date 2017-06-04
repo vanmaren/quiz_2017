@@ -2,7 +2,8 @@ var models = require("../models");
 var Sequelize = require('sequelize');
 var session =require('./session_controller')
 var paginate = require('../helpers/paginate').paginate;
-
+var user =require('./user_controller')
+var tip=require('./tip_controller')
 // Autoload el quiz asociado a :quizId
 exports.load = function (req, res, next, quizId) {
 
@@ -229,42 +230,59 @@ exports.check = function (req, res, next) {
 // GET /quizzes/random_play
 exports.randomplay = function (req, res, next) {
 
-  if(!req.session.p52){
-      req.session.p52={pyp:[-1]};
-     }
-    if(req.session.p52.max==req.session.p52.pyp.length-1){
-        var score = req.session.p52.pyp.length-1;
+    if (!req.session.p52) {
+        req.session.p52 = {pyp: [-1]};
+    }
+    if (req.session.p52.max == req.session.p52.pyp.length - 1) {
+        var score = req.session.p52.pyp.length - 1;
         score.INTEGER;
-        req.session.p52.pyp.length=1;
-        req.session.p52.max.length=1;
+        req.session.p52.pyp.length = 1;
+        req.session.p52.max.length = 1;
         delete req.session.p52.max;
-        res.render('quizzes/randomnomore',{ score: score });
+        res.render('quizzes/randomnomore', {score: score});
         next();
     }
-     models.Quiz.count({where:{id:{$notIn:req.session.p52.pyp}}}) // cuenta el numero de preguntas, la lomngitud del array de pregunatas
-     .then(function (count) {
-         if(!req.session.p52.max){ // si no existen el atributo max lo crea siendo el numero de preguntas maximas
-             req.session.p52.max=count; //iguala maxima al resto de preguntas
-         }
-             var aleatoria = Math.floor(Math.random()*count);
-             return models.Quiz.findAll({where:{id:{$notIn:req.session.p52.pyp}},limit:1,offset:aleatoria});
-             //para ir concatenando promesas entre si
-         })
-             .then(function (quizzes) {
-                 var q = quizzes[0];
+    models.Quiz.count({where: {id: {$notIn: req.session.p52.pyp}}}) // cuenta el numero de preguntas, la lomngitud del array de pregunatas
+        .then(function (count) {
+            if (!req.session.p52.max) { // si no existen el atributo max lo crea siendo el numero de preguntas maximas
+                req.session.p52.max = count; //iguala maxima al resto de preguntas
+            }
+            var aleatoria = Math.floor(Math.random() * count);
+            return models.Quiz.findAll({where: {id: {$notIn: req.session.p52.pyp}}, limit: 1, offset: aleatoria});
+            //para ir concatenando promesas entre si
+        })
+        .then(function (quizzes) {
+            var q = quizzes[0];
 
-                 return models.Tip.findAll({where:{Authorid:q.AuthorId}})
-                     .then(function (pistas) {
-                         var arrayDePistas = pistas[0].text;
-                         res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1,pistas:arrayDePistas, autor:quiz.q.AuthorId});
+            var identificador = quizzes[0].id;
+            var autor = quizzes[0].AuthorId;
 
-                     })
+            return models.Tip.findById(quizzes[0].id)
+                .then(function (pistas) {
+                    if (pistas!== null) {
+                        var autorPista = pistas.Tips[0].Author.username
+                        res.render('quizzes/randomplay', {
+                            quiz: quizzes[0],
+                            score: req.session.p52.pyp.length - 1,
+                            //pistas: pistas[0],
+                            pistas: pistas.Tips[0],
+                            autor: autorPista
+                        });
+                    } else {
+                        res.render('quizzes/randomplay', {
+                            quiz: quizzes[0],
+                            score: req.session.p52.pyp.length - 1,
+                            //pistas: pistas[0],
+                            pistas: "no hay",
+                            autor: "Anonimo"
+                        });
+                    }
 
-             })
+                })
 
+        })
+}
 
-
-    };
 
 // GET /quizzes/randomcheck
 exports.randomcheck = function (req, res, next) {
