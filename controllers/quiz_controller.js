@@ -2,8 +2,7 @@ var models = require("../models");
 var Sequelize = require('sequelize');
 var session =require('./session_controller')
 var paginate = require('../helpers/paginate').paginate;
-var user =require('./user_controller')
-var tip=require('./tip_controller')
+
 // Autoload el quiz asociado a :quizId
 exports.load = function (req, res, next, quizId) {
 
@@ -12,21 +11,19 @@ exports.load = function (req, res, next, quizId) {
             {model: models.Tip, include: [{model: models.User, as: 'Author'}]},
             {model: models.User, as: 'Author'}
         ]
-    }).then(function (quiz) {
-
-
-        if (quiz) {
-            req.quiz = quiz;
-
-            next();
-
-        } else {
-            throw new Error('No existe ningún quiz con id=' + quizId);
-        }
     })
-    .catch(function (error) {
-        next(error);
-    });
+        .then(function (quiz) {
+            if (quiz) {
+                req.quiz = quiz;
+                next();
+            } else {
+                throw new Error('No existe ningún quiz con id=' + quizId);
+            }
+        })
+        .catch(function (error) {
+            next(error);
+        });
+
 };
 
 
@@ -105,8 +102,12 @@ exports.index = function (req, res, next) {
 
 // GET /quizzes/:quizId
 exports.show = function (req, res, next) {
+    var autorQuiz= models.Quiz.findById(Number(req.quiz.id))
+    .then(function (quizzes) {
+        res.render('quizzes/show', {quiz: quizzes});
 
-    res.render('quizzes/show', {quiz: req.quiz});
+    });
+
 };
 
 
@@ -208,7 +209,8 @@ exports.play = function (req, res, next) {
 
     res.render('quizzes/play', {
         quiz: req.quiz,
-        answer: answer
+        answer: answer,
+
     });
 };
 
@@ -230,58 +232,38 @@ exports.check = function (req, res, next) {
 // GET /quizzes/random_play
 exports.randomplay = function (req, res, next) {
 
-    if (!req.session.p52) {
-        req.session.p52 = {pyp: [-1]};
+    if(!req.session.p52){
+        req.session.p52={pyp:[-1]};
     }
-    if (req.session.p52.max == req.session.p52.pyp.length - 1) {
-        var score = req.session.p52.pyp.length - 1;
+    if(req.session.p52.max==req.session.p52.pyp.length-1){
+        var score = req.session.p52.pyp.length-1;
         score.INTEGER;
-        req.session.p52.pyp.length = 1;
-        req.session.p52.max.length = 1;
+        req.session.p52.pyp.length=1;
+        req.session.p52.max.length=1;
         delete req.session.p52.max;
-        res.render('quizzes/randomnomore', {score: score});
+        res.render('quizzes/randomnomore',{ score: score });
         next();
     }
-    models.Quiz.count({where: {id: {$notIn: req.session.p52.pyp}}}) // cuenta el numero de preguntas, la lomngitud del array de pregunatas
+    models.Quiz.count({where:{id:{$notIn:req.session.p52.pyp}}}) // cuenta el numero de preguntas, la lomngitud del array de pregunatas
         .then(function (count) {
-            if (!req.session.p52.max) { // si no existen el atributo max lo crea siendo el numero de preguntas maximas
-                req.session.p52.max = count; //iguala maxima al resto de preguntas
+            if(!req.session.p52.max){ // si no existen el atributo max lo crea siendo el numero de preguntas maximas
+                req.session.p52.max=count; //iguala maxima al resto de preguntas
             }
-            var aleatoria = Math.floor(Math.random() * count);
-            return models.Quiz.findAll({where: {id: {$notIn: req.session.p52.pyp}}, limit: 1, offset: aleatoria});
-            //para ir concatenando promesas entre si
+
+            var aleatoria = Math.floor(Math.random()*count);
+            return models.Quiz.findAll({where:{id:{$notIn:req.session.p52.pyp}},limit:1,offset:aleatoria});
         })
         .then(function (quizzes) {
             var q = quizzes[0];
 
-            var identificador = quizzes[0].id;
-            var autor = quizzes[0].AuthorId;
-
-            return models.Tip.findById(quizzes[0].id)
-                .then(function (pistas) {
-                    if (pistas!== null) {
-                        var autorPista = pistas.Tips[0].Author.username
-                        res.render('quizzes/randomplay', {
-                            quiz: quizzes[0],
-                            score: req.session.p52.pyp.length - 1,
-                            //pistas: pistas[0],
-                            pistas: pistas.Tips[0],
-                            autor: autorPista
-                        });
-                    } else {
-                        res.render('quizzes/randomplay', {
-                            quiz: quizzes[0],
-                            score: req.session.p52.pyp.length - 1,
-                            //pistas: pistas[0],
-                            pistas: "no hay",
-                            autor: "Anonimo"
-                        });
-                    }
-
-                })
+            res.render('quizzes/randomplay',{quiz:q, score:req.session.p52.pyp.length-1} );
 
         })
-}
+
+
+};
+
+
 
 
 // GET /quizzes/randomcheck
@@ -300,7 +282,7 @@ exports.randomcheck = function (req, res, next) {
             quiz: req.quiz,
             result: result,
             answer: answer,
-            score: score
+            score: 0
         });
           //delete req.session.p52;
 

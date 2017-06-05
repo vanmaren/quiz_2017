@@ -28,9 +28,7 @@ module.exports = {
                     allowNull: false
                 },
 
-                AuthorId: {
-                    type: Sequelize.INTEGER
-                }
+
             },
             {
                 sync: {force: true}

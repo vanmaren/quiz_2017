@@ -13,34 +13,9 @@
     </p>
 
 
-
     <div class="wideRow">
         <input type="text" class="itemWide" id="answer" name="answer" value="" placeholder="Respuesta" autocomplete="off"/>
         <input type="submit" class="itemNarrow" id="send" value="Comprobar">
     </div>
-
-    <ul><span id="pistas"><%= pistas %></span></ul>
-
-    <h1>
-        Pistas:
-    </h1>
-
-    <% if (session.user) { %>
-        <% include ../tips/new %>
-    <% } %>
-
-    <% var tips = quiz.Tips; %>
-    <% var quizId = quiz.id; %>
-    <% var quizAuthorId = quiz.AuthorId; %>
-
-    <% include ../tips/index %>
-
-
-
 </form>
-<p>
-
-</p>
-
-<a href="/quizzes"><button>Volver</button></a>
 
