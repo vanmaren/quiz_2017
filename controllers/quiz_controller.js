@@ -282,7 +282,7 @@ exports.randomcheck = function (req, res, next) {
             quiz: req.quiz,
             result: result,
             answer: answer,
-            score: req.session.p52.pyp.length-1
+            score: score
         });
           //delete req.session.p52;
 
