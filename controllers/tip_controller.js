@@ -1,6 +1,6 @@
 var models = require('../models');
 var Sequelize = require('sequelize');
-
+var session=require('./session_controller');
 
 // Autoload la pista asociado a :tipId
 exports.load = function (req, res, next, tipId) {
