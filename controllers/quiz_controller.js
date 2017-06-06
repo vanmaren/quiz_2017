@@ -282,7 +282,7 @@ exports.randomcheck = function (req, res, next) {
             quiz: req.quiz,
             result: result,
             answer: answer,
-            score: score
+            score: 0
         });
           //delete req.session.p52;
 
