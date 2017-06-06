@@ -102,12 +102,18 @@ exports.index = function (req, res, next) {
 
 // GET /quizzes/:quizId
 exports.show = function (req, res, next) {
-    var autorQuiz= models.Quiz.findById(Number(req.quiz.id))
+    /*var autorQuiz= models.Quiz.findById(Number(req.quiz.id))
     .then(function (quizzes) {
         res.render('quizzes/show', {quiz: quizzes});
 
-    });
+    });*/
+    var answer = req.query.answer || '';
 
+    res.render('quizzes/play', {
+        quiz: req.quiz,
+        answer: answer,
+
+    });
 };
 
 
