@@ -269,28 +269,13 @@ exports.randomplay = function (req, res, next) {
 // GET /quizzes/randomcheck
 exports.randomcheck = function (req, res, next) {
 
-    if(!req.session.p52){
-        req.session.p52={pyp:[-1]};
-    }
+
     var answer = req.query.answer|| ""; //la respuesta del quiz se pasa por medio de la url  y entonces la cohe
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim(); //compara las respuestas
+    var score;
+    if(result && req.session.p52){
 
-    if(!result){
-
-        var score = req.session.p52.pyp.length-1;
-        score.INTEGER;
-        delete req.session.p52;
-        res.render('quizzes/randomresult', {
-            quiz: req.quiz,
-            result: result,
-            answer: answer,
-            score: 0
-        });
-          //delete req.session.p52;
-
-
-    } else{
         req.session.p52.pyp.push(req.quiz.id);
         res.render('quizzes/randomresult', {
             quiz: req.quiz,
@@ -298,6 +283,30 @@ exports.randomcheck = function (req, res, next) {
             answer: answer,
             score: req.session.p52.pyp.length-1
         });
+
+
+    } else{
+
+        if (result) {
+            score =1;
+        }
+        else{
+            score = 0;
+            if(req.session.p52){
+                delete req.session.p52;
+            }
+
+        }
+
+        delete req.session.p52;
+        res.render('quizzes/randomresult', {
+            quiz: req.quiz,
+            result: result,
+            answer: answer,
+            score: score
+        });
+        //delete req.session.p52;
+
 
     }
 
