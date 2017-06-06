@@ -269,6 +269,9 @@ exports.randomplay = function (req, res, next) {
 // GET /quizzes/randomcheck
 exports.randomcheck = function (req, res, next) {
 
+    if(!req.session.p52){
+        req.session.p52={pyp:[-1]};
+    }
     var answer = req.query.answer|| ""; //la respuesta del quiz se pasa por medio de la url  y entonces la cohe
 
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim(); //compara las respuestas
